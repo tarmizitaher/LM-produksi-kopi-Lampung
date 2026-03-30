@@ -1,0 +1,11 @@
+station_id,station_name,latitude,longitude,kabupaten,keterangan
+LP01,Bandar Lampung,-5.45,105.26,Kota Bandar Lampung,Ibukota Provinsi
+LP02,Metro,-5.11,105.31,Kota Metro,Lampung Tengah
+LP03,Pringsewu,-5.36,104.97,Pringsewu,Dataran Rendah
+LP04,Kotabumi,-4.83,104.88,Lampung Utara,Utara Lampung
+LP05,Liwa,-5.02,104.06,Lampung Barat,Dataran Tinggi
+LP06,Kalianda,-5.72,105.62,Lampung Selatan,Pesisir Selatan
+LP07,Menggala,-4.54,105.24,Tulang Bawang,Utara
+LP08,Sukadana,-4.75,105.50,Lampung Timur,Timur
+LP09,Tanggamus,-5.42,104.63,Tanggamus,Barat
+LP10,Pesawaran,-5.52,105.08,Pesawaran,Tengah
