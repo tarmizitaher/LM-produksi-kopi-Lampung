@@ -1,0 +1,5 @@
+model,feature_set,n_features,n_samples,r2,rmse,mae,mape,timestamp
+random_forest,optimal,15,120,0.3368,200.17,146.95,28.44,2026-03-31T05:17:04.875463
+linear_regression,optimal,15,120,0.2409,214.16,163.55,30.89,2026-03-31T05:16:28.040892
+xgboost,optimal,15,120,0.2395,214.36,143.31,27.97,2026-03-31T05:17:38.554815
+svr,optimal,15,120,-0.0048,246.39,167.25,27.39,2026-03-31T05:17:38.901532

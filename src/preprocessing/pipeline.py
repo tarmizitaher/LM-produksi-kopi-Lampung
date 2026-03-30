@@ -503,6 +503,46 @@ def main():
     else:
         print("  No SPI features computed")
 
+    # Step 2d: MODIS NDVI/EVI features
+    print("\n[Step 2d] Computing MODIS features...")
+    modis_path = RAW_MODIS / "modis_ndvi_evi_lampung.csv"
+    modis_features = pd.DataFrame()
+    if modis_path.exists():
+        modis_raw = pd.read_csv(modis_path)
+        # Pivot to get ndvi and evi as separate columns per observation
+        ndvi_data = modis_raw[modis_raw["band"] == "ndvi"].copy()
+        evi_data = modis_raw[modis_raw["band"] == "evi"].copy()
+
+        # Aggregate to monthly mean per kabupaten
+        ndvi_monthly = ndvi_data.groupby(["kabupaten", "year", "month"]).agg(ndvi=("value", "mean")).reset_index()
+        evi_monthly = evi_data.groupby(["kabupaten", "year", "month"]).agg(evi=("value", "mean")).reset_index()
+
+        # Aggregate to annual features per kabupaten
+        modis_rows = []
+        for (kab, year), grp in ndvi_monthly.groupby(["kabupaten", "year"]):
+            feat = {"kabupaten": kab, "year": year}
+            feat["ndvi_mean_annual"] = round(grp["ndvi"].mean(), 4)
+            feat["ndvi_min"] = round(grp["ndvi"].min(), 4)
+            feat["ndvi_max"] = round(grp["ndvi"].max(), 4)
+            feat["ndvi_std"] = round(grp["ndvi"].std(), 4)
+            # NDVI anomaly = mean - long-term mean for this kabupaten
+            long_term = ndvi_monthly[ndvi_monthly["kabupaten"] == kab]["ndvi"].mean()
+            feat["ndvi_anomaly"] = round(grp["ndvi"].mean() - long_term, 4)
+
+            # EVI
+            evi_grp = evi_monthly[(evi_monthly["kabupaten"] == kab) & (evi_monthly["year"] == year)]
+            if not evi_grp.empty:
+                feat["evi_mean_annual"] = round(evi_grp["evi"].mean(), 4)
+                feat["evi_min"] = round(evi_grp["evi"].min(), 4)
+
+            modis_rows.append(feat)
+
+        modis_features = pd.DataFrame(modis_rows)
+        modis_features.to_csv(INTERIM_DIR / "modis_features.csv", index=False)
+        print(f"  MODIS features: {len(modis_features)} records, {len(modis_features.columns)-2} features")
+    else:
+        print("  WARNING: No MODIS data found")
+
     # Step 4: BPS data
     print("\n[Step 4] Loading BPS data...")
     bps_data = load_bps_data()
@@ -530,6 +570,12 @@ def main():
     # Step 5: Merge
     print("\n[Step 5] Merging dataset...")
     dataset = merge_dataset(chirps_features, climate_indices, bps_data, era5_features)
+
+    # Add MODIS features
+    if not dataset.empty and not modis_features.empty and "kabupaten" in dataset.columns:
+        dataset = dataset.merge(modis_features, on=["year", "kabupaten"], how="left")
+        ndvi_cols = [c for c in dataset.columns if "ndvi" in c or "evi" in c]
+        print(f"  + MODIS added: {len(ndvi_cols)} features, {dataset['ndvi_mean_annual'].notna().sum()} matches")
 
     # Add SPI features
     if not dataset.empty and not spi_features.empty and "kabupaten" in dataset.columns:

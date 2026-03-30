@@ -69,6 +69,27 @@ FEATURE_SETS = {
     "full": ALL_FEATURES,
 }
 
+# Optimal feature set based on SHAP analysis (top-15)
+OPTIMAL_FEATURES = [
+    "evi_mean_annual",
+    "temp_mean_annual",
+    "temp_max_dry",
+    "et0_annual",
+    "ndvi_mean_annual",
+    "ndvi_min",
+    "evi_min",
+    "precip_wet",
+    "ndvi_max",
+    "precip_wet_lag1",
+    "ndvi_anomaly",
+    "solar_rad_annual",
+    "elevation_m",
+    "humidity_mean",
+    "precip_transition_1",
+]
+
+FEATURE_SETS["optimal"] = OPTIMAL_FEATURES
+
 # Seasonal month definitions (for Lampung tropical climate)
 SEASONS = {
     "wet": [11, 12, 1, 2, 3],
