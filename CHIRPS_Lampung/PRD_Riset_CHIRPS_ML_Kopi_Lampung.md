@@ -52,20 +52,26 @@ Membangun model machine learning untuk memprediksi produktivitas kopi Robusta di
 4. Mengidentifikasi variabel iklim yang paling berpengaruh terhadap produktivitas kopi melalui feature importance analysis
 5. Membangun framework early warning system sederhana untuk risiko penurunan produktivitas
 
-### 3.3 Pertanyaan Riset (Research Questions)
-- **RQ1:** Seberapa akurat data CHIRPS merepresentasikan pola curah hujan di wilayah perkebunan kopi Lampung?
-- **RQ2:** Variabel iklim apa yang paling signifikan mempengaruhi produktivitas kopi Robusta di Lampung?
-- **RQ3:** Model ML mana yang paling optimal untuk memprediksi produktivitas kopi berdasarkan data iklim satelit?
-- **RQ4:** Dapatkah model yang dibangun digunakan sebagai early warning terhadap risiko penurunan produktivitas?
+### 3.3 Pertanyaan Riset & Hipotesis
 
----
+> **Dokumen lengkap: [`docs/research_questions.md`](../docs/research_questions.md)**
 
-## 4. Hipotesis
+- **RQ1 (Validation):** How accurately does CHIRPS v2.0 represent precipitation in Lampung's coffee-growing regions vs BMKG gauges?
+  - H1: CHIRPS monthly precipitation correlates at r > 0.7 with bias < ±15%
+- **RQ2 (Climate-Yield):** Which precipitation-derived variables most influence Robusta coffee productivity in Lampung?
+  - H2: Dry-season precipitation & flowering-phase SPI are the top-2 predictors
+  - H3: El Nino years show ≥15% productivity decline
+- **RQ3 (Prediction):** Which ML approach provides the most accurate coffee productivity prediction?
+  - H4: XGBoost achieves R² > 0.75, MAPE < 12%
+  - H5: CHIRPS-only model achieves ≥80% of full model's R²
+- **RQ4 (Application):** Can the model serve as a seasonal early warning tool?
+  - H6: 3-month lead prediction achieves R² > 0.60
 
-- **H1:** Data CHIRPS memiliki korelasi tinggi (r > 0.7) dengan data stasiun BMKG di Lampung pada skala bulanan
-- **H2:** Curah hujan pada fase pembungaan (Jun-Aug) dan pematangan buah (Sep-Nov) memiliki pengaruh paling signifikan terhadap produktivitas kopi
-- **H3:** Model ensemble (XGBoost/Random Forest) memberikan akurasi prediksi lebih baik dibanding model linier konvensional (R² > 0.75)
-- **H4:** Anomali curah hujan negatif (SPI < -1) berkorelasi dengan penurunan produktivitas kopi pada musim panen berikutnya
+### 3.4 Sprint Plan
+
+> **Dokumen lengkap: [`docs/sprint_plan.md`](../docs/sprint_plan.md)**
+
+6 sprints × 2 minggu — target submission September 2026.
 
 ---
 
