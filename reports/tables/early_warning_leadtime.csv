@@ -1,0 +1,6 @@
+lead_time,n_features,n_samples,r2,rmse,mape,accuracy,sensitivity,specificity
+12-month (Jun prev yr),3,56,0.7268,123.2,16.3,0.857,0.778,0.895
+9-month (Sep),6,56,0.5922,150.5,20.1,0.786,0.778,0.789
+6-month (Dec),10,56,0.5852,151.8,20.7,0.768,0.722,0.789
+3-month (Feb),17,56,0.6047,148.1,20.3,0.732,0.667,0.763
+0-month (full year),18,56,0.6017,148.7,20.3,0.732,0.667,0.763

@@ -1,0 +1,7 @@
+config,model,train_n,test_n,r2,rmse,mae,mape
+"Simple (3 feat, early warning)",LR,42,14,0.5718,158.1,133.1,25.6
+"Simple (3 feat, early warning)",RF,42,14,0.7679,116.4,89.5,16.7
+"Simple (3 feat, early warning)",XGB,42,14,0.6652,139.8,95.0,18.5
+Optimal (15 feat),LR,42,14,0.5275,166.1,134.5,25.3
+Optimal (15 feat),RF,42,14,0.4945,171.8,132.3,26.4
+Optimal (15 feat),XGB,42,14,0.2171,213.8,152.9,30.8

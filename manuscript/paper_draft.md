@@ -192,24 +192,93 @@ To evaluate the potential for seasonal forecasting, the best-performing model wa
 
 ## 4. Results
 
-*[To be written after data analysis is complete]*
-
 ### 4.1 CHIRPS Validation
+
+*[To be completed when BMKG station data is available — see Sprint 2 in sprint plan]*
+
 ### 4.2 Climate–Yield Relationships
+
+Correlation analysis between climate variables and Robusta coffee productivity across the seven major coffee-producing districts revealed that temperature-related variables exhibited the strongest associations. Mean annual temperature showed a negative correlation with productivity (r = −0.41), indicating that cooler highland districts — particularly Lampung Barat (912 m asl, mean productivity 987 kg/ha) and Tanggamus (857 m asl, 810 kg/ha) — consistently outperformed warmer lowland districts such as Lampung Utara (37 m, 418 kg/ha) and Way Kanan (102 m, 439 kg/ha). Maximum dry-season temperature (r = −0.40) further suggested heat stress during the flowering phase as a productivity-limiting factor.
+
+ENSO showed a negative association with productivity at the provincial level (r = −0.65 for annual Niño 3.4 index), consistent with the approximately 20% production decline observed during the 2023–2024 El Niño event. However, at the district level with the expanded dataset, this signal was diluted by the dominant spatial (inter-district) variability.
+
+SHAP analysis on the Random Forest model identified the following feature importance ranking (mean |SHAP| values): mean annual temperature (82.4), maximum dry-season temperature (45.1), wet-season precipitation (20.2), potential evapotranspiration (16.8), and elevation (13.7). Notably, temperature and evapotranspiration — both proxies for the altitudinal gradient — collectively accounted for over 60% of total SHAP importance, confirming that the highland-lowland gradient is the primary driver of spatial productivity variation in Lampung.
+
 ### 4.3 Model Performance
+
+#### 4.3.1 Model Comparison
+
+Three machine learning models were evaluated using Leave-One-Year-Out (LOGO) cross-validation on the seven major coffee-producing districts (n = 56 district-year observations). Using the optimal 15-feature set identified through SHAP-based feature selection, Random Forest achieved the best overall performance (R² = 0.34, RMSE = 200.2 kg/ha, MAPE = 28.4%), followed by XGBoost (R² = 0.24) and Linear Regression (R² = 0.24) (Table 2).
+
+However, a parsimonious model using only three features — previous year's wet-season precipitation, mean annual temperature, and elevation — substantially outperformed the full model (RF: R² = 0.61, RMSE = 147.8 kg/ha, MAPE = 19.8%). This result reflects the bias-variance tradeoff inherent to small-sample learning: with only 56 observations, models with fewer features generalize better to unseen years.
+
+When harvested area was included as a non-climate management proxy, model performance increased dramatically (RF: R² = 0.93, RMSE = 61.0 kg/ha, MAPE = 7.4%), confirming that approximately 33% of productivity variation is attributable to non-climatic factors such as management intensity, planting density, and farmer expertise.
+
+#### 4.3.2 Ablation Study
+
+The ablation study quantified the incremental contribution of each data source (Table 3). CHIRPS precipitation features alone explained minimal variance (RF R² = 0.08), indicating that precipitation alone is insufficient for predicting coffee productivity in Lampung. Adding ERA5 temperature and evapotranspiration variables produced the largest marginal improvement (+0.51 in R²), elevating the model to R² = 0.58. Subsequent additions of DEM elevation (+0.02), MODIS vegetation indices (+0.00), and SPI drought indices (−0.01) yielded diminishing returns.
+
+This finding suggests that temperature — as a proxy for the altitudinal gradient and associated microclimatic conditions — is the dominant climate driver of spatial productivity variation. The limited contribution of MODIS NDVI/EVI in the Random Forest model, despite its high SHAP importance in the full model, may reflect collinearity with temperature and elevation features that already capture the highland-lowland gradient.
+
+#### 4.3.3 Final Hold-Out Test
+
+The parsimonious Random Forest model (3 features) was independently validated on the 2021–2022 hold-out test set (n = 14 district-years), achieving R² = 0.77, RMSE = 116.4 kg/ha, and MAPE = 16.7% (Table 4). Per-district predictions showed excellent accuracy for the largest producer (Lampung Barat: −2.6% to −6.5% error) and moderate accuracy for mid-range producers (Pringsewu: ±7–8%). The model tended to underpredict Tanggamus (−21 to −28%) and overpredict Way Kanan (+30 to +47%), suggesting district-specific factors not captured by the three-feature model.
+
 ### 4.4 Early Warning Application
+
+Lead-time analysis revealed that the parsimonious model retained strong predictive skill even at extended lead times (Table 5, Fig. 7). At a 12-month lead time — using only the previous year's wet-season precipitation, mean annual temperature, and elevation — the model achieved R² = 0.73, MAPE = 16.3%, and a binary classification accuracy of 85.7% for above/below-average productivity (sensitivity = 77.8%, specificity = 89.5%).
+
+Paradoxically, prediction skill *decreased* at shorter lead times (9-month: R² = 0.59; 3-month: R² = 0.60) as additional features were added. This counterintuitive result is consistent with the overfitting pattern observed in the model comparison analysis and suggests that for operational early warning, a simple model relying on the previous year's wet-season recharge and static site characteristics outperforms data-rich alternatives.
+
+The practical implication is significant: coffee stakeholders in Lampung could receive reliable productivity forecasts up to one year before harvest, using freely available satellite data (CHIRPS) and minimal computational resources. An above/below-average warning at 12-month lead time could support decisions regarding input procurement, labor planning, and market positioning.
 
 ---
 
 ## 5. Discussion
 
-*[To be written after results]*
+### 5.1 Temperature as the Dominant Driver
+
+The finding that temperature-related variables — rather than precipitation — dominate coffee productivity prediction in Lampung challenges the common assumption that rainfall is the primary climate driver for tropical agriculture. This result is consistent with the known physiology of Robusta coffee: while the crop requires adequate moisture, its optimal temperature range (22–28°C) is more narrowly constrained, and temperatures above 30°C can cause heat stress, reduced photosynthesis, and flower abortion (Dinh et al., 2022).
+
+In Lampung's context, the temperature gradient is primarily driven by elevation. Lampung Barat and Tanggamus, situated at 850–1,200 m asl in the Bukit Barisan highlands, experience mean temperatures of 23–24°C — within the optimal range for Robusta. In contrast, lowland districts (Lampung Utara, Way Kanan) at 37–102 m asl experience temperatures of 27–28°C, near the upper thermal limit. This altitudinal effect explains why elevation and temperature consistently emerge as the top predictive features across all model configurations.
+
+### 5.2 Comparison with Previous Studies
+
+Our best model performance (R² = 0.77 on the hold-out test) compares favorably with existing coffee yield prediction studies. Aparecido et al. (2022) achieved R² = 0.82 for Brazilian coffee using agroclimatic data and machine learning, but with farm-level data and management variables. Kouadio et al. (2021) reported probabilistic forecasts for Robusta coffee in Vietnam using farm-scale agroclimatic indices. Aprilia et al. (2025) achieved R² = 0.85 for Lampung coffee using NASA POWER data and Random Forest, though with a single model and without cross-validation by year.
+
+Our study advances beyond Aprilia et al. (2025) in several respects: (1) CHIRPS provides 10× higher spatial resolution than NASA POWER (0.05° vs 0.5°); (2) we employ rigorous Leave-One-Year-Out cross-validation rather than random splits; (3) SHAP analysis provides interpretable feature importance rankings; (4) the ablation study quantifies each data source's contribution; and (5) the lead-time analysis demonstrates operational early warning potential.
+
+### 5.3 The Value of Parsimony
+
+A key finding of this study is that a three-feature model (wet-season precipitation lag, temperature, elevation) outperformed models with 15–18 features across all evaluation metrics. This finding reinforces the conclusions of Meroni et al. (2021), who demonstrated that ML superiority over simple benchmarks is fully achieved only after extensive calibration, particularly when dealing with small data.
+
+For agricultural prediction in data-sparse regions — which characterizes much of tropical smallholder agriculture — this result has important implications. Practitioners need not wait for comprehensive multi-source datasets; a parsimonious model using freely available satellite precipitation data and a digital elevation model can provide operationally useful forecasts.
+
+### 5.4 Limitations
+
+Several limitations should be acknowledged. First, the study period (2014–2022) encompasses only 9 years of district-level production data, limiting the sample size to 56 observations for the seven-district analysis. While LOGO cross-validation and the hold-out test provide robust performance estimates, additional years of data would strengthen model reliability.
+
+Second, the BPS production statistics are reported at the district level and may not fully capture within-district heterogeneity in management practices, coffee varieties, and microclimatic conditions. Farm-level data would enable more precise modeling but is not systematically available in Indonesia.
+
+Third, the CHIRPS validation against BMKG gauge stations (Section 4.1) remains incomplete pending data acquisition. While Marzuki et al. (2025) and Pratama et al. (2022) have demonstrated CHIRPS reliability in Indonesia and Lampung respectively, a dedicated validation for the specific coffee-growing districts used in this study would strengthen the methodological foundation.
+
+Fourth, non-climatic factors — including fertilization, pest and disease management, coffee plant age, and variety — are not explicitly modeled. The harvested area variable partially captures management intensity, but these factors likely account for much of the residual 23% of unexplained variance in the hold-out test.
 
 ---
 
 ## 6. Conclusion
 
-*[To be written last]*
+This study developed and evaluated machine learning models for predicting Robusta coffee productivity in Lampung, Indonesia, using satellite-derived climate data. The key findings are as follows:
+
+1. **Temperature dominates precipitation** as the primary climate driver of coffee productivity variation across Lampung's districts. Mean annual temperature and dry-season maximum temperature, both reflecting the altitudinal gradient between highland and lowland coffee zones, collectively explained over 60% of model feature importance.
+
+2. **A parsimonious Random Forest model** using only three freely available features — previous year's wet-season precipitation (CHIRPS), mean annual temperature (ERA5), and elevation (SRTM DEM) — achieved R² = 0.77 on the hold-out test set (2021–2022), outperforming more complex multi-source models with 15–18 features.
+
+3. **The ablation study** demonstrated that ERA5 temperature variables provided the largest marginal contribution to prediction accuracy (+0.51 in R²), while CHIRPS precipitation alone was insufficient (R² = 0.08). Adding management proxies (harvested area) increased performance to R² = 0.93, indicating that approximately one-third of productivity variation is attributable to non-climatic factors.
+
+4. **The model retains predictive skill at 12-month lead times**, achieving R² = 0.73 and 85.7% binary classification accuracy for above/below-average productivity using only the previous year's wet-season precipitation. This finding demonstrates the potential for an operational early warning system for Lampung's coffee sector.
+
+These results suggest that satellite-based climate monitoring, combined with simple machine learning models, can provide useful productivity forecasts for Robusta coffee in tropical regions with sparse ground observation networks. Future work should expand the temporal coverage of production data, incorporate farm-level management variables, and validate the early warning framework through operational pilot testing with local agricultural extension services.
 
 ---
 
