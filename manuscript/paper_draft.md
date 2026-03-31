@@ -4,7 +4,7 @@
 
 **Target Journal:** International Journal of Climatology / Remote Sensing (MDPI)
 
-**Status:** First Draft — Sections 1–3
+**Status:** Complete First Draft — All Sections
 
 ---
 
@@ -67,15 +67,15 @@ Monthly ENSO indices (Oceanic Niño Index, ONI, based on the Niño 3.4 region se
 
 #### 2.2.4 ERA5 Reanalysis Data
 
-*[To be added after data acquisition — monthly temperature, humidity, evapotranspiration from Copernicus Climate Data Store]*
+Monthly averaged ERA5 reanalysis data were obtained from the Copernicus Climate Data Store for the period 2010–2023 at 0.25° (~25 km) spatial resolution. Five variables were extracted: 2-meter temperature, 2-meter dewpoint temperature, total precipitation, potential evaporation, and surface solar radiation downwards. Relative humidity was derived from temperature and dewpoint using the Magnus formula. Data were spatially extracted at each district centroid.
 
 #### 2.2.5 MODIS Vegetation Indices
 
-*[To be added after data acquisition — NDVI and EVI from NASA Earthdata]*
+MODIS Terra Vegetation Indices (MOD13Q1, Collection 6.1) were obtained from the NASA ORNL DAAC TESViS web service at 250 m spatial resolution and 16-day temporal resolution for the period 2010–2023. Both Normalized Difference Vegetation Index (NDVI) and Enhanced Vegetation Index (EVI) were extracted at each district centroid and aggregated to monthly means. Annual features (mean, minimum, maximum, standard deviation, and anomaly) were computed for use in the prediction models.
 
 #### 2.2.6 Digital Elevation Model
 
-*[To be added — SRTM 30m or DEMNAS for elevation and slope features]*
+Elevation data were obtained from the Shuttle Radar Topography Mission (SRTM) Global 30-meter dataset via the OpenTopoData API. Mean elevation was extracted at each district centroid within an approximately 5 km radius. Elevation ranged from 7 m (Bandar Lampung, Tulang Bawang Barat) to 1,180 m (Pesawaran) across the 15 districts.
 
 ### 2.3 Data Summary
 
@@ -88,7 +88,7 @@ Table 1 summarizes all datasets used in this study.
 | ENSO ONI | NOAA CPC | Niño 3.4 SST anomaly (°C) | Global index | Monthly | 1950–2025 | Open |
 | IOD DMI | NOAA PSL | Dipole Mode Index (°C) | Global index | Monthly | 1870–2025 | Open |
 | ERA5 | Copernicus CDS | Temperature, humidity, ET₀ | 0.25° (~25 km) | Monthly | 2010–2023 | Open |
-| MODIS (MOD13A3) | NASA Earthdata | NDVI, EVI | 1 km | Monthly | 2010–2023 | Open |
+| MODIS (MOD13Q1) | NASA ORNL DAAC | NDVI, EVI | 250 m | 16-day | 2010–2023 | Open |
 | DEM | USGS/BIG | Elevation (m) | 30 m | Static | — | Open |
 
 ---
@@ -132,12 +132,25 @@ The Standardized Precipitation Index (SPI) was computed at 3-, 6-, and 12-month 
 
 Annual mean and seasonal values of the Oceanic Niño Index (ONI) and Dipole Mode Index (DMI) were included to capture the influence of ENSO and IOD on local precipitation and coffee productivity.
 
-**Additional features** *(pending data acquisition)*:
+**ERA5-derived features:**
 
-- ERA5-derived: mean annual temperature, maximum dry-season temperature, potential evapotranspiration (ET₀), mean relative humidity, climatic water deficit (ET₀ − precipitation)
-- MODIS-derived: mean annual NDVI, minimum NDVI (stress indicator), NDVI anomaly
-- Topographic: mean elevation and slope per district from SRTM DEM
-- Non-climate control: harvested area (ha) as a proxy for management intensity
+- Mean annual temperature (°C) and maximum dry-season temperature (°C)
+- Annual potential evapotranspiration (ET₀, mm)
+- Mean relative humidity (%)
+- Annual surface solar radiation (MJ/m²)
+- Climatic water deficit (ET₀ − precipitation, mm)
+
+**MODIS-derived features:**
+
+- Mean annual NDVI and EVI
+- Minimum NDVI and EVI (stress indicators)
+- Maximum NDVI and NDVI standard deviation
+- NDVI anomaly relative to the 2010–2023 long-term mean
+
+**Topographic and management features:**
+
+- Mean elevation (m asl) per district from SRTM DEM
+- Harvested area (ha) as a proxy for management intensity
 
 ### 3.4 Machine Learning Models
 
@@ -296,4 +309,110 @@ These results suggest that satellite-based climate monitoring, combined with sim
 
 ## References
 
-*[See docs/references.bib — all entries verified via CrossRef API]*
+*[See docs/references.bib — 28 entries verified via CrossRef API]*
+
+---
+
+## Tables
+
+### Table 1. Summary of datasets used in this study.
+
+| Dataset | Source | Variables | Spatial Res. | Temporal Res. | Period |
+|---------|--------|-----------|-------------|--------------|--------|
+| CHIRPS v2.0 | CHC UCSB | Precipitation (mm) | 0.05° (~5 km) | Monthly | 1981–2023 |
+| ERA5 | Copernicus CDS | Temp., humidity, ET₀, solar rad. | 0.25° (~25 km) | Monthly | 2010–2023 |
+| MODIS MOD13Q1 | NASA ORNL DAAC | NDVI, EVI | 250 m | 16-day | 2010–2023 |
+| SRTM DEM | OpenTopoData | Elevation (m) | 30 m | Static | — |
+| BPS Production | BPS Lampung | Area, production, productivity | District | Annual | 2014–2022 |
+| ENSO ONI | NOAA CPC | Niño 3.4 SST anomaly (°C) | Global | Monthly | 1950–2025 |
+| IOD DMI | NOAA PSL | Dipole Mode Index (°C) | Global | Monthly | 1870–2025 |
+| BMKG Rainfall | BMKG Lampung | Max daily rainfall (mm) | Station | Monthly | 2015–2024 |
+
+### Table 2. CHIRPS validation against BMKG stations in Lampung (2015–2023).
+
+| Station | Matched District | n | Pearson r | p-value | POD | FAR | Accuracy |
+|---------|-----------------|---|-----------|---------|-----|-----|----------|
+| Negeri Sakti | Pringsewu | 108 | 0.498 | <0.001 | 0.958 | 0.052 | 91.7% |
+| Kemiling | Bandar Lampung | 108 | 0.486 | <0.001 | 0.939 | 0.042 | 90.7% |
+| Way Semah | Lampung Barat | 108 | 0.525 | <0.001 | 0.980 | 0.040 | 94.4% |
+| **Overall** | — | **324** | **0.515** | **<0.001** | **0.959** | **0.045** | **92.3%** |
+
+*Note: BMKG data represents maximum daily rainfall per month; CHIRPS represents total monthly precipitation. Correlation reflects temporal pattern agreement rather than absolute magnitude.*
+
+### Table 3. Model comparison using Leave-One-Year-Out cross-validation (top-7 coffee districts, n = 56).
+
+| Model | Features | R² | RMSE (kg/ha) | MAE (kg/ha) | MAPE (%) |
+|-------|----------|-----|------|-----|------|
+| **RF (parsimonious)** | **3** | **0.607** | **147.8** | **102.3** | **19.8** |
+| LR (parsimonious) | 3 | 0.560 | 156.4 | 124.6 | 24.4 |
+| XGBoost (parsimonious) | 3 | 0.532 | 161.2 | 103.9 | 20.0 |
+| RF (optimal) | 15 | 0.337 | 200.2 | 147.0 | 28.4 |
+| RF + harvested area | 16 | 0.933 | 61.0 | — | 7.4 |
+
+### Table 4. Ablation study — incremental feature contribution (RF, LOGO CV, top-7 coffee districts).
+
+| Feature Set | n Features | RF R² | LR R² | XGB R² | RF MAPE (%) |
+|-------------|-----------|-------|-------|--------|------------|
+| A1: CHIRPS only | 4 | 0.08 | 0.12 | −0.43 | 34.5 |
+| A2: + ERA5 (temp, ET₀) | 9 | 0.58 | 0.65 | 0.44 | 20.5 |
+| A3: + DEM (elevation) | 10 | 0.61 | 0.64 | 0.45 | 19.8 |
+| A4: + MODIS (NDVI/EVI) | 16 | 0.61 | 0.55 | 0.44 | 19.8 |
+| A5: + SPI (drought) | 19 | 0.60 | 0.37 | 0.44 | 20.0 |
+| A6: + Feature engineering | 22 | 0.60 | 0.24 | 0.42 | 20.0 |
+| A7: + Harvested area | 23 | 0.93 | 0.80 | 0.88 | 7.3 |
+
+### Table 5. Final hold-out test results (train: 2015–2020, test: 2021–2022, n = 14).
+
+| Model | Features | R² | RMSE (kg/ha) | MAE (kg/ha) | MAPE (%) |
+|-------|----------|-----|------|-----|------|
+| **RF (parsimonious)** | **3** | **0.768** | **116.4** | **89.5** | **16.7** |
+| XGBoost (parsimonious) | 3 | 0.665 | 139.8 | 95.0 | 18.5 |
+| LR (parsimonious) | 3 | 0.572 | 158.1 | 133.1 | 25.6 |
+| RF (optimal) | 15 | 0.495 | 171.8 | 132.3 | 26.4 |
+
+### Table 6. Early warning lead-time analysis (RF, parsimonious features, top-7 coffee districts).
+
+| Lead Time | Available Data | n Features | R² | MAPE (%) | Accuracy | Sensitivity | Specificity |
+|-----------|---------------|-----------|-----|---------|----------|-------------|-------------|
+| 12-month | Prev. year wet precip, temp, elev. | 3 | 0.73 | 16.3 | 85.7% | 77.8% | 89.5% |
+| 9-month | + dry season precip, temp max | 6 | 0.59 | 20.1 | 78.6% | 77.8% | 78.9% |
+| 6-month | + MODIS, ET₀ | 10 | 0.59 | 20.7 | 76.8% | 72.2% | 78.9% |
+| 3-month | + full CHIRPS, ERA5, MODIS | 17 | 0.60 | 20.3 | 73.2% | 66.7% | 76.3% |
+| 0-month | All features (hindcast) | 18 | 0.60 | 20.3 | 73.2% | 66.7% | 76.3% |
+
+---
+
+## Figures
+
+### Fig. 1. Study area map
+*Location of Lampung Province and the seven major coffee-producing districts analyzed in this study.*
+`[reports/figures/peta_curah_hujan_lampung.png — to be updated with study area map]`
+
+### Fig. 2. Methodological framework
+*Overview of the four-stage analytical framework: CHIRPS validation, feature engineering, ML modeling, and early warning application.*
+`[To be created]`
+
+### Fig. 3. CHIRPS validation against BMKG stations
+*Scatter plots comparing CHIRPS monthly total precipitation with BMKG maximum daily rainfall for three stations in Lampung (2015–2023). Blue = wet season (Nov–Mar), red = dry season (Jun–Sep), gray = transition.*
+![Fig. 3](../reports/figures/chirps_validation_bmkg.png)
+
+### Fig. 4. Model comparison
+*Performance metrics (R², RMSE, MAE, MAPE) for three ML models using Leave-One-Year-Out cross-validation on the top-7 coffee-producing districts.*
+![Fig. 4](../reports/figures/model_comparison_coffee.png)
+
+### Fig. 5. Predicted vs actual productivity
+*Random Forest predictions against observed Robusta coffee productivity for the seven major producing districts. Colors represent individual districts.*
+![Fig. 5](../reports/figures/predicted_vs_actual_coffee.png)
+
+### Fig. 6. SHAP feature importance
+*(a) Mean |SHAP| values ranking feature importance. (b) SHAP summary plot showing feature value effects on model output.*
+![Fig. 6a](../reports/figures/shap_bar_coffee.png)
+![Fig. 6b](../reports/figures/shap_summary_coffee.png)
+
+### Fig. 7. Ablation study
+*Incremental contribution of data sources to model performance. (a) R² by feature set. (b) MAPE by feature set.*
+![Fig. 7](../reports/figures/ablation_study_coffee.png)
+
+### Fig. 8. Early warning lead-time analysis
+*(a) R² and MAPE as a function of lead time before harvest. (b) Binary classification accuracy, sensitivity, and specificity for above/below-average productivity prediction.*
+![Fig. 8](../reports/figures/early_warning_leadtime.png)
