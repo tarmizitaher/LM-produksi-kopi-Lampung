@@ -10,7 +10,9 @@
 
 ## Abstract
 
-*[To be written last, after all results are finalized]*
+Robusta coffee productivity in Lampung, Indonesia — the country's second-largest coffee-producing province — is increasingly threatened by climate variability, yet quantitative prediction tools based on satellite-derived climate data remain absent. This study developed machine learning models to predict district-level Robusta coffee productivity using the Climate Hazards Group InfraRed Precipitation with Stations (CHIRPS) dataset, ERA5 reanalysis, MODIS vegetation indices, and topographic data. Three models (Random Forest, XGBoost, and Linear Regression) were evaluated using Leave-One-Year-Out cross-validation across seven major coffee-producing districts (n = 56 district-year observations, 2014–2022). A parsimonious Random Forest model using only three features — previous year's wet-season precipitation (CHIRPS), mean annual temperature (ERA5), and elevation (SRTM) — achieved R² = 0.77 and MAPE = 16.7% on an independent hold-out test (2021–2022), outperforming more complex models with 15–18 features. An ablation study revealed that ERA5 temperature variables contributed the largest marginal improvement (+0.51 in R²), while CHIRPS precipitation alone was insufficient (R² = 0.08), indicating that the highland–lowland temperature gradient — rather than rainfall — is the dominant driver of spatial productivity variation. SHAP analysis confirmed mean annual temperature, dry-season maximum temperature, and elevation as the top three predictive features. The model retained strong predictive skill at a 12-month lead time (R² = 0.73, classification accuracy = 85.7% for above/below-average productivity), demonstrating potential for an operational early warning system. These findings suggest that satellite-based climate monitoring combined with simple machine learning models can provide operationally useful coffee productivity forecasts in data-sparse tropical regions.
+
+**Keywords:** CHIRPS, machine learning, Random Forest, Robusta coffee, yield prediction, SHAP, Lampung, Indonesia, early warning, satellite precipitation
 
 ---
 
