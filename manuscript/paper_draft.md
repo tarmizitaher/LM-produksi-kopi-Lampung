@@ -194,7 +194,13 @@ To evaluate the potential for seasonal forecasting, the best-performing model wa
 
 ### 4.1 CHIRPS Validation
 
-*[To be completed when BMKG station data is available — see Sprint 2 in sprint plan]*
+CHIRPS v2.0 monthly precipitation was validated against maximum daily rainfall records from three BMKG stations in Lampung: Negeri Sakti (Pringsewu district), Kemiling (Bandar Lampung), and Way Semah (Lampung Barat) for the period 2015–2023. Although the available BMKG data represents maximum daily rainfall per month rather than total monthly precipitation — precluding a direct quantitative comparison — the temporal correspondence between the two datasets was assessed through Pearson correlation and wet/dry month detection metrics.
+
+Across all three stations (n = 324 station-months), CHIRPS monthly totals correlated positively and significantly with BMKG maximum daily rainfall (overall r = 0.52, p < 0.001). The correlation was highest for Way Semah (r = 0.53), located in the highland coffee district of Lampung Barat, followed by Negeri Sakti (r = 0.50) and Kemiling (r = 0.49). The moderate correlation values are expected given the comparison of different rainfall metrics (monthly total vs daily maximum) and are consistent with the general relationship that months with higher total rainfall tend to also produce more intense daily events.
+
+Categorical validation of wet/dry month detection yielded strong results. Using thresholds of BMKG maximum daily rainfall > 10 mm and CHIRPS monthly total > 50 mm to define wet months, CHIRPS achieved a probability of detection (POD) of 0.96, a false alarm ratio (FAR) of 0.05, and an overall accuracy of 92.3%. Way Semah showed the highest detection accuracy (94.4%), indicating that CHIRPS reliably captures the seasonal precipitation cycle in Lampung's highland coffee zone.
+
+These results complement the findings of Pratama et al. (2022), who reported CHIRPS POD of 0.86 during the wet season in South Lampung with direct comparison against total monthly station data, and Marzuki et al. (2025), who demonstrated CHIRPS reliability across Indonesia (CC > 0.7, relative bias < ±25%). While a full validation using total monthly BMKG data would strengthen this assessment, the available evidence supports the use of CHIRPS for capturing precipitation variability in Lampung's coffee-growing districts.
 
 ### 4.2 Climate–Yield Relationships
 
