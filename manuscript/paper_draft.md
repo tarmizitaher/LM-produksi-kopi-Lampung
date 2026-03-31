@@ -387,8 +387,8 @@ These results suggest that satellite-based climate monitoring, combined with sim
 ## Figures
 
 ### Fig. 1. Study area map
-*Location of Lampung Province and the seven major coffee-producing districts analyzed in this study.*
-`[reports/figures/peta_curah_hujan_lampung.png — to be updated with study area map]`
+*Location of Lampung Province in Sumatra, Indonesia (a), and the seven major coffee-producing districts with BMKG validation stations (b). Circle size represents harvested area; color represents mean productivity (kg/ha).*
+![Fig. 1](../reports/figures/fig1_study_area.png)
 
 ### Fig. 2. Methodological framework
 *Overview of the four-stage analytical framework: CHIRPS validation, feature engineering, ML modeling, and early warning application.*
