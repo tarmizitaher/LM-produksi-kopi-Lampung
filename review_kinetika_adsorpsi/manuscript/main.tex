@@ -1,0 +1,248 @@
+% =====================================================================
+% Review: Model Kinetika Adsorpsi
+% Narrative review, Bahasa Indonesia, target jurnal nasional terakreditasi SINTA
+% Kompilasi: latexmk -pdf main.tex   (lihat ../README.md)
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english,bahasai]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage[style=apa,backend=biber]{biblatex}
+\DeclareLanguageMapping{bahasai}{english-apa}
+\addbibresource{references.bib}
+\usepackage[hidelinks]{hyperref}
+
+% Placeholder isi yang belum ditulis
+\newcommand{\todo}[1]{\textbf{[TODO: #1]}}
+
+\title{Model Kinetika Adsorpsi: Tinjauan Dasar Teori, Penurunan Persamaan,
+       dan Metode Estimasi Parameter}
+\author{Nama Penulis\thanks{Afiliasi, email korespondensi.}}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ---------------------------------------------------------------------
+\begin{abstract}
+\todo{Abstrak 150--250 kata: latar belakang, ruang lingkup tinjauan
+(model reaksi permukaan dan model difusi), temuan utama (mis.\ bias
+perbandingan PFO vs PSO berbasis linearisasi), dan rekomendasi.}
+
+\medskip
+\noindent\textbf{Kata kunci:} kinetika adsorpsi; pseudo-orde satu;
+pseudo-orde dua; difusi intrapartikel; regresi non-linear
+\end{abstract}
+
+\begin{otherlanguage}{english}
+\renewcommand{\abstractname}{Abstract}
+\begin{abstract}
+\todo{English abstract (wajib di sebagian besar jurnal SINTA).}
+
+\medskip
+\noindent\textbf{Keywords:} adsorption kinetics; pseudo-first order;
+pseudo-second order; intraparticle diffusion; non-linear regression
+\end{abstract}
+\end{otherlanguage}
+
+% ---------------------------------------------------------------------
+\section{Pendahuluan}
+\label{sec:pendahuluan}
+
+\todo{Paragraf 1: peran adsorpsi dalam pengolahan air limbah (zat warna,
+logam berat) dan alasan adsorben murah banyak dikaji
+\parencite{Bailey1999_LowCostHeavyMetals,Crini2006_LowCostDye}.}
+
+\todo{Paragraf 2: isoterm menjelaskan kesetimbangan
+\parencite{Foo2010_IsothermModeling}, sedangkan kinetika menjelaskan
+laju dan mekanisme; keduanya diperlukan untuk desain reaktor.}
+
+\todo{Paragraf 3: celah --- banyak studi memilih model hanya berdasarkan
+$R^2$ dari bentuk linear
+\parencite{Tran2017_AdsorptionMistakes,Simonin2016_PFOvsPSO}.}
+
+\todo{Paragraf 4: tujuan dan susunan tinjauan ini.}
+
+% ---------------------------------------------------------------------
+\section{Konsep Dasar Kinetika Adsorpsi}
+\label{sec:konsep}
+
+Kapasitas adsorpsi pada waktu $t$ dihitung dari neraca massa:
+\begin{equation}
+  q_t = \frac{(C_0 - C_t)\,V}{m},
+  \label{eq:qt}
+\end{equation}
+dengan $q_t$ jumlah adsorbat teradsorpsi (\si{\milli\gram\per\gram}),
+$C_0$ dan $C_t$ konsentrasi awal dan pada waktu $t$
+(\si{\milli\gram\per\liter}), $V$ volume larutan (\si{\liter}), dan
+$m$ massa adsorben (\si{\gram}).
+
+\todo{Tahapan transport: (i) transfer massa eksternal (difusi film),
+(ii) difusi intrapartikel, (iii) adsorpsi pada situs aktif. Tahap
+paling lambat mengendalikan laju keseluruhan.}
+
+% ---------------------------------------------------------------------
+\section{Model Reaksi Permukaan}
+\label{sec:reaksi}
+
+\subsection{Pseudo-orde satu (PFO)}
+Model Lagergren mengasumsikan laju sebanding dengan jumlah situs kosong:
+\begin{equation}
+  \frac{dq_t}{dt} = k_1 (q_e - q_t).
+  \label{eq:pfo-diff}
+\end{equation}
+Integrasi dengan $q_t = 0$ pada $t = 0$ menghasilkan
+\begin{equation}
+  q_t = q_e\left(1 - e^{-k_1 t}\right),
+  \label{eq:pfo}
+\end{equation}
+dengan bentuk linear $\ln(q_e - q_t) = \ln q_e - k_1 t$.
+\todo{Sitasi sumber asli Lagergren (1898) --- belum terverifikasi.}
+
+\subsection{Pseudo-orde dua (PSO)}
+\begin{equation}
+  \frac{dq_t}{dt} = k_2 (q_e - q_t)^2
+  \quad\Longrightarrow\quad
+  q_t = \frac{k_2 q_e^2\, t}{1 + k_2 q_e\, t},
+  \label{eq:pso}
+\end{equation}
+dengan bentuk linear yang paling sering dipakai
+\begin{equation}
+  \frac{t}{q_t} = \frac{1}{k_2 q_e^2} + \frac{t}{q_e},
+  \label{eq:pso-lin}
+\end{equation}
+serta laju adsorpsi awal $h = k_2 q_e^2$
+\parencite{Ho1999_PseudoSecondOrder}.
+
+\todo{Diskusi kritis: mengapa PSO hampir selalu ``menang''
+\parencite{Simonin2016_PFOvsPSO}.}
+
+\subsection{Model Elovich}
+\begin{equation}
+  \frac{dq_t}{dt} = \alpha\, e^{-\beta q_t}
+  \quad\Longrightarrow\quad
+  q_t = \frac{1}{\beta}\ln(1 + \alpha\beta t),
+  \label{eq:elovich}
+\end{equation}
+dengan $\alpha$ laju adsorpsi awal dan $\beta$ konstanta desorpsi.
+\todo{Sitasi dan interpretasi (permukaan heterogen, kemisorpsi).}
+
+\subsection{Model Avrami}
+\begin{equation}
+  q_t = q_e\left\{1 - \exp\!\left[-(k_{AV}\, t)^{n_{AV}}\right]\right\}.
+  \label{eq:avrami}
+\end{equation}
+\todo{Sitasi dan interpretasi orde fraksional $n_{AV}$.}
+
+% ---------------------------------------------------------------------
+\section{Model Difusi}
+\label{sec:difusi}
+
+\subsection{Difusi intrapartikel (Weber--Morris)}
+\begin{equation}
+  q_t = k_{id}\, t^{1/2} + C,
+  \label{eq:weber-morris}
+\end{equation}
+dengan $C$ terkait ketebalan lapisan batas. Plot multilinear
+menunjukkan lebih dari satu tahap pengendali laju.
+\todo{Sitasi Weber \& Morris (1963) --- belum terverifikasi.}
+
+\subsection{Model film Boyd}
+Dengan $F = q_t/q_e$,
+\begin{equation}
+  F = 1 - \frac{6}{\pi^2}\sum_{n=1}^{\infty}\frac{1}{n^2}
+      \exp\!\left(-n^2 B t\right),
+  \label{eq:boyd}
+\end{equation}
+yang didekati dengan
+\begin{equation}
+  Bt =
+  \begin{cases}
+    \left(\sqrt{\pi} - \sqrt{\pi - \dfrac{\pi^2 F}{3}}\right)^{2},
+      & F \le 0.85,\\[2ex]
+    -0.4977 - \ln(1 - F), & F > 0.85.
+  \end{cases}
+  \label{eq:boyd-approx}
+\end{equation}
+Garis $Bt$ terhadap $t$ yang tidak melalui titik asal menandakan difusi
+film ikut mengendalikan laju.
+\todo{Sitasi Boyd dkk.\ (1947) --- belum terverifikasi.}
+
+% ---------------------------------------------------------------------
+\section{Estimasi Parameter dan Pemilihan Model}
+\label{sec:estimasi}
+
+\todo{Linear vs non-linear: transformasi linear mengubah struktur galat
+dan membiaskan parameter
+\parencite{Foo2010_IsothermModeling,Tran2017_AdsorptionMistakes}.}
+
+Beberapa fungsi galat yang umum dipakai untuk membandingkan model:
+\begin{align}
+  \chi^2 &= \sum_{i=1}^{N}
+            \frac{(q_{e,\mathrm{exp}} - q_{e,\mathrm{cal}})_i^2}
+                 {q_{e,\mathrm{cal},i}},
+  \label{eq:chi2}\\
+  \mathrm{RMSE} &= \sqrt{\frac{1}{N}\sum_{i=1}^{N}
+            (q_{\mathrm{exp}} - q_{\mathrm{cal}})_i^2},
+  \label{eq:rmse}\\
+  \mathrm{AIC} &= N \ln\!\left(\frac{\mathrm{SSE}}{N}\right) + 2p,
+  \label{eq:aic}
+\end{align}
+dengan $N$ jumlah titik data, SSE jumlah kuadrat galat, dan $p$ jumlah
+parameter model.
+
+\begin{table}[ht]
+  \centering
+  \caption{Ringkasan model kinetika adsorpsi yang dibahas.}
+  \label{tab:ringkasan}
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    Model & Persamaan & Parameter & Kategori \\
+    \midrule
+    PFO & \eqref{eq:pfo} & $q_e$, $k_1$ & Reaksi permukaan \\
+    PSO & \eqref{eq:pso} & $q_e$, $k_2$ & Reaksi permukaan \\
+    Elovich & \eqref{eq:elovich} & $\alpha$, $\beta$ & Empiris \\
+    Avrami & \eqref{eq:avrami} & $q_e$, $k_{AV}$, $n_{AV}$ & Empiris \\
+    Weber--Morris & \eqref{eq:weber-morris} & $k_{id}$, $C$ & Difusi \\
+    Boyd & \eqref{eq:boyd} & $B$ & Difusi film \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\todo{Rujuk Tabel~\ref{tab:ringkasan} di teks dan tambahkan contoh
+aplikasi (adsorbat, adsorben, model terbaik) dari literatur.}
+
+% ---------------------------------------------------------------------
+\section{Kesalahan Umum dalam Pelaporan Kinetika}
+\label{sec:kesalahan}
+
+\todo{Rangkum dari \textcite{Tran2017_AdsorptionMistakes} dan
+\textcite{Wang2020_KineticModels}: satuan $k_2$, $q_e$ hitung vs
+eksperimen, jumlah titik data awal, interpretasi mekanisme dari
+kecocokan model.}
+
+% ---------------------------------------------------------------------
+\section{Tantangan dan Arah Penelitian}
+\label{sec:tantangan}
+
+\todo{Model berbasis fisika (mis.\ HSDM), kinetika sistem kolom,
+pemodelan multikomponen, pendekatan statistik/ML untuk pemilihan model.}
+
+% ---------------------------------------------------------------------
+\section{Kesimpulan}
+\label{sec:kesimpulan}
+
+\todo{3--4 poin kesimpulan dan rekomendasi praktis.}
+
+% ---------------------------------------------------------------------
+\printbibliography[title={Daftar Pustaka}]
+
+\end{document}

@@ -51,3 +51,17 @@ Thumbs.db
 !data/processed/.gitkeep
 !data/external/.gitkeep
 !models/.gitkeep
+
+# LaTeX build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+review_kinetika_adsorpsi/manuscript/*.pdf
