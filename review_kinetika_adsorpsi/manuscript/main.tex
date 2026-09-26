@@ -1,0 +1,352 @@
+% =====================================================================
+% Review: Adsorption Kinetic Models (liquid-phase batch systems)
+% Narrative review (English); target: international journal (TBD)
+% Angle: A (practitioner's workflow) + B (unifying rate-limiting-step
+%        framework) + reproducible re-analysis of published datasets
+% Build: latexmk -pdf main.tex   (see ../README.md)
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[american]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage[style=apa,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage[hidelinks]{hyperref}
+
+% Placeholder for unwritten content
+\newcommand{\todo}[1]{\textbf{[TODO: #1]}}
+
+\title{Adsorption Kinetics in Liquid-Phase Batch Systems: From Rate-Limiting
+       Steps to Robust Model Selection}
+\author{Author Name\thanks{Affiliation; corresponding e-mail.}}
+\date{}
+
+\begin{document}
+\maketitle
+
+% ---------------------------------------------------------------------
+\begin{abstract}
+\todo{Abstract, 200--250 words: (1) kinetic models are routinely fitted
+but rarely interpreted correctly; (2) this review organizes liquid-phase
+batch models by rate-limiting step and shows how they are related;
+(3) a workflow for design, fitting, and selection, demonstrated by
+re-analysis of published datasets; (4) reporting checklist.}
+
+\medskip
+\noindent\textbf{Keywords:} adsorption kinetics; batch adsorption;
+pseudo-second order; intraparticle diffusion; non-linear regression;
+model selection
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\todo{P1: Adsorption is a leading option for removing dyes, metals, and
+emerging contaminants from water; low-cost adsorbents dominate the
+literature \parencite{Bailey1999_LowCostHeavyMetals,Crini2006_LowCostDye}.}
+
+\todo{P2: Isotherms describe equilibrium \parencite{Foo2010_IsothermModeling};
+kinetics describe rate and, potentially, mechanism. Kinetic parameters feed
+contact-time selection and reactor design.}
+
+\todo{P3: The problem --- PSO is reported as ``best fit'' in most studies,
+often from linearized plots, and then used to claim chemisorption
+\parencite{Tran2017_AdsorptionMistakes,Simonin2016_PFOvsPSO}.}
+
+\todo{P4: Existing reviews catalog models \parencite{Wang2020_KineticModels}
+or list mistakes \parencite{Tran2017_AdsorptionMistakes}; none links the
+physical basis of each model to a practical, tested workflow.}
+
+\todo{P5: Aim, scope (liquid-phase, batch, single solute; column and
+gas-phase systems excluded), and organization.}
+
+% =====================================================================
+\section{Physical Basis of Batch Adsorption Kinetics}
+\label{sec:basis}
+
+\subsection{Mass balance in a batch reactor}
+The amount adsorbed at time $t$ follows from a mass balance:
+\begin{equation}
+  q_t = \frac{(C_0 - C_t)\,V}{m},
+  \label{eq:qt}
+\end{equation}
+where $q_t$ is the amount adsorbed (\si{\milli\gram\per\gram}), $C_0$ and
+$C_t$ are the initial and time-$t$ concentrations
+(\si{\milli\gram\per\liter}), $V$ is the solution volume (\si{\liter}),
+and $m$ is the adsorbent mass (\si{\gram}).
+
+\todo{Emphasize that $C_t$ decreases during the run (finite bath), which
+many models implicitly ignore.}
+
+\subsection{Resistances in series}
+\todo{Figure 1: schematic of a particle with (i) bulk transport,
+(ii) external film diffusion, (iii) intraparticle (pore/surface)
+diffusion, (iv) attachment at the active site. The slowest step controls
+the overall rate.}
+
+\subsection{Diagnosing the controlling step}
+\todo{Effect of agitation speed (film), particle size (intraparticle),
+and $C_0$ and temperature on apparent rate constants; Biot number for
+relative film vs intraparticle resistance.}
+
+% =====================================================================
+\section{Surface-Reaction Models}
+\label{sec:reaction}
+
+\subsection{Langmuir kinetics as the parent model}
+Assuming reversible attachment on a homogeneous monolayer,
+\begin{equation}
+  \frac{dq_t}{dt} = k_a C_t (q_m - q_t) - k_d q_t,
+  \label{eq:langmuir-kin}
+\end{equation}
+where $k_a$ and $k_d$ are the adsorption and desorption rate constants and
+$q_m$ is the monolayer capacity. At equilibrium Eq.~\eqref{eq:langmuir-kin}
+reduces to the Langmuir isotherm. If $C_t \approx C_0$ (large excess of
+adsorbate), Eq.~\eqref{eq:langmuir-kin} becomes linear in $q_t$ and yields
+the PFO form (Section~\ref{sec:pfo}) with $k_1 = k_a C_0 + k_d$.
+
+\todo{Cite the analysis showing PFO at high $C_0$ and PSO-like behavior at
+low $C_0$ (Azizian, 2004 --- not yet verified).}
+
+\subsection{Pseudo-first order (PFO)}
+\label{sec:pfo}
+\begin{equation}
+  \frac{dq_t}{dt} = k_1 (q_e - q_t)
+  \quad\Longrightarrow\quad
+  q_t = q_e\left(1 - e^{-k_1 t}\right),
+  \label{eq:pfo}
+\end{equation}
+with the linear form $\ln(q_e - q_t) = \ln q_e - k_1 t$, which requires
+$q_e$ to be known in advance.
+\todo{Cite original Lagergren (1898) --- not yet verified.}
+
+\subsection{Pseudo-second order (PSO)}
+\label{sec:pso}
+\begin{equation}
+  \frac{dq_t}{dt} = k_2 (q_e - q_t)^2
+  \quad\Longrightarrow\quad
+  q_t = \frac{k_2 q_e^2\, t}{1 + k_2 q_e\, t},
+  \label{eq:pso}
+\end{equation}
+whose most widely used linear form is
+\begin{equation}
+  \frac{t}{q_t} = \frac{1}{k_2 q_e^2} + \frac{t}{q_e},
+  \label{eq:pso-lin}
+\end{equation}
+and the initial adsorption rate is $h = k_2 q_e^2$
+\parencite{Ho1999_PseudoSecondOrder}.
+
+\todo{Note that $t/q_t$ vs $t$ is dominated by late-time points, so a high
+$R^2$ is almost guaranteed \parencite{Simonin2016_PFOvsPSO}.}
+
+\subsection{Mixed-order and \texorpdfstring{$n$th}{nth}-order models}
+\todo{General $n$th-order and mixed first/second-order rate laws that
+contain PFO and PSO as limits (sources not yet verified).}
+
+\subsection{Empirical models: Elovich and Avrami}
+\begin{equation}
+  \frac{dq_t}{dt} = \alpha\, e^{-\beta q_t}
+  \quad\Longrightarrow\quad
+  q_t = \frac{1}{\beta}\ln(1 + \alpha\beta t),
+  \label{eq:elovich}
+\end{equation}
+\begin{equation}
+  q_t = q_e\left\{1 - \exp\!\left[-(k_{AV}\, t)^{n_{AV}}\right]\right\}.
+  \label{eq:avrami}
+\end{equation}
+\todo{Interpretation: Elovich for energetically heterogeneous surfaces;
+Avrami fractional order $n_{AV}$. Stress that both are descriptive, not
+mechanistic. Original sources not yet verified.}
+
+% =====================================================================
+\section{Diffusion Models}
+\label{sec:diffusion}
+
+\subsection{External film diffusion}
+Transfer across the liquid film is commonly written as
+\begin{equation}
+  \frac{dC_t}{dt} = -\beta_L S\,(C_t - C_s),
+  \label{eq:film}
+\end{equation}
+where $\beta_L$ is the external mass-transfer coefficient
+(\si{\centi\meter\per\second}), $S$ the external particle surface area
+per unit solution volume (\si{\per\centi\meter}), and $C_s$ the
+concentration at the particle surface. At early times $C_s \approx 0$, so
+$\ln(C_t/C_0) \approx -\beta_L S\, t$.
+\todo{Citation for the initial-rate method --- not yet verified.}
+
+\subsection{Boyd film model}
+With $F = q_t/q_e$,
+\begin{equation}
+  F = 1 - \frac{6}{\pi^2}\sum_{n=1}^{\infty}\frac{1}{n^2}
+      \exp\!\left(-n^2 B t\right),
+  \label{eq:boyd}
+\end{equation}
+which is approximated by
+\begin{equation}
+  Bt =
+  \begin{cases}
+    \left(\sqrt{\pi} - \sqrt{\pi - \dfrac{\pi^2 F}{3}}\right)^{2},
+      & F \le 0.85,\\[2ex]
+    -0.4977 - \ln(1 - F), & F > 0.85.
+  \end{cases}
+  \label{eq:boyd-approx}
+\end{equation}
+A $Bt$ versus $t$ line that does not pass through the origin indicates
+that film diffusion contributes to rate control.
+\todo{Cite Boyd et al.\ (1947) --- not yet verified.}
+
+\subsection{Intraparticle diffusion (Weber--Morris)}
+\begin{equation}
+  q_t = k_{id}\, t^{1/2} + C,
+  \label{eq:weber-morris}
+\end{equation}
+where $C$ relates to the boundary-layer thickness. A multilinear plot
+indicates more than one rate-controlling step.
+\todo{Cite Weber \& Morris (1963) --- not yet verified. Discuss the
+subjectivity of choosing breakpoints.}
+
+\subsection{Homogeneous surface diffusion model (HSDM)}
+For a spherical particle of radius $R$,
+\begin{equation}
+  \frac{\partial q}{\partial t} =
+  \frac{D_s}{r^2}\frac{\partial}{\partial r}
+  \left(r^2 \frac{\partial q}{\partial r}\right),
+  \qquad 0 < r < R,
+  \label{eq:hsdm}
+\end{equation}
+coupled to the film equation at $r = R$ and to the batch mass balance.
+\todo{Brief: physically meaningful $D_s$, but requires numerical solution;
+point to the code accompanying Section~\ref{sec:reanalysis}.}
+
+% =====================================================================
+\section{Linking the Models}
+\label{sec:linking}
+
+\todo{Core ``B'' section. (1) PFO as the $C_t \approx C_0$ limit of
+Langmuir kinetics (Eq.~\ref{eq:langmuir-kin}); (2) conditions under which
+PSO emerges from Langmuir kinetics and from diffusion-controlled uptake;
+(3) consequence: goodness of fit alone cannot identify mechanism.}
+
+\todo{Figure 2: map of models as limits of one another.
+Figure 3: one synthetic diffusion-controlled curve fitted equally well by
+PFO, PSO, and Elovich.}
+
+% =====================================================================
+\section{Parameter Estimation and Model Selection}
+\label{sec:estimation}
+
+\subsection{Linear vs non-linear regression}
+\todo{Linearization changes the error structure and weights points
+unequally \parencite{Foo2010_IsothermModeling,Tran2017_AdsorptionMistakes}.
+Recommend non-linear least squares on $q_t$ (or $C_t$).}
+
+\subsection{Error functions and information criteria}
+\begin{align}
+  \mathrm{RMSE} &= \sqrt{\frac{1}{N}\sum_{i=1}^{N}
+            (q_{\mathrm{exp}} - q_{\mathrm{cal}})_i^2},
+  \label{eq:rmse}\\
+  \chi^2 &= \sum_{i=1}^{N}
+            \frac{(q_{\mathrm{exp}} - q_{\mathrm{cal}})_i^2}
+                 {q_{\mathrm{cal},i}},
+  \label{eq:chi2}\\
+  \mathrm{AIC_c} &= N \ln\!\left(\frac{\mathrm{SSE}}{N}\right) + 2p
+            + \frac{2p(p+1)}{N - p - 1},
+  \label{eq:aicc}\\
+  \mathrm{BIC} &= N \ln\!\left(\frac{\mathrm{SSE}}{N}\right) + p\ln N,
+  \label{eq:bic}
+\end{align}
+where $N$ is the number of data points, SSE the sum of squared errors,
+and $p$ the number of model parameters.
+\todo{Why AIC\textsubscript{c} matters: kinetic runs often have
+$N \approx 10$--15 points.}
+
+\subsection{Residuals and parameter uncertainty}
+\todo{Residual plots, confidence intervals from the covariance matrix or
+bootstrap, correlation between $q_e$ and $k$.}
+
+\subsection{Experimental design for kinetics}
+\todo{Dense sampling at early times, runs at several $C_0$, agitation and
+particle-size tests, replicates.}
+
+\subsection{Recommended workflow}
+\todo{Figure 4: decision flowchart from experimental design to reporting.}
+
+% =====================================================================
+\section{Re-analysis of Published Datasets}
+\label{sec:reanalysis}
+
+\todo{Select 3--5 published liquid-phase batch datasets (different
+adsorbate classes: dye, metal, organic micropollutant). Refit all models
+with linear and non-linear methods; compare rankings by $R^2$ vs
+AIC\textsubscript{c}; report parameter uncertainty. Code in
+\texttt{analysis/}.}
+
+\todo{Table 2: dataset sources. Table 3: fitted parameters and criteria.
+Figure 5: linear vs non-linear fits for one dataset.}
+
+% =====================================================================
+\section{Common Pitfalls and Reporting Checklist}
+\label{sec:pitfalls}
+
+\todo{Build on \textcite{Tran2017_AdsorptionMistakes} and
+\textcite{Wang2020_KineticModels}: wrong units of $k_2$, calculated vs
+experimental $q_e$, too few early-time points, inferring chemisorption from
+PSO, ignoring the finite-bath effect.}
+
+\todo{Table 4: reporting checklist for kinetic studies.}
+
+% =====================================================================
+\section{Outlook}
+\label{sec:outlook}
+
+\todo{Physically based models becoming accessible via open-source solvers;
+multicomponent systems; data-driven model selection; standard datasets and
+code sharing. Note that column and gas-phase kinetics are outside the
+scope of this review.}
+
+% =====================================================================
+\section{Conclusions}
+\label{sec:conclusions}
+
+\todo{Three to four conclusions and practical recommendations.}
+
+% ---------------------------------------------------------------------
+\begin{table}[ht]
+  \centering
+  \caption{Liquid-phase batch kinetic models covered in this review.}
+  \label{tab:summary}
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    Model & Equation & Parameters & Controlling step \\
+    \midrule
+    Langmuir kinetics & \eqref{eq:langmuir-kin} & $k_a$, $k_d$, $q_m$
+      & Surface reaction \\
+    PFO & \eqref{eq:pfo} & $q_e$, $k_1$ & Surface reaction (apparent) \\
+    PSO & \eqref{eq:pso} & $q_e$, $k_2$ & Surface reaction (apparent) \\
+    Elovich & \eqref{eq:elovich} & $\alpha$, $\beta$ & Empirical \\
+    Avrami & \eqref{eq:avrami} & $q_e$, $k_{AV}$, $n_{AV}$ & Empirical \\
+    Film diffusion & \eqref{eq:film} & $\beta_L$ & External film \\
+    Boyd & \eqref{eq:boyd} & $B$ & External film \\
+    Weber--Morris & \eqref{eq:weber-morris} & $k_{id}$, $C$
+      & Intraparticle \\
+    HSDM & \eqref{eq:hsdm} & $D_s$ & Intraparticle \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\todo{Refer to Table~\ref{tab:summary} in Section~\ref{sec:intro} or
+Section~\ref{sec:linking}.}
+
+\printbibliography
+
+\end{document}
