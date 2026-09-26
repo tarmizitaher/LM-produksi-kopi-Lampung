@@ -1,34 +1,33 @@
-# Review Kinetika Adsorpsi
+# Adsorption Kinetics Review
 
-Narrative review (Bahasa Indonesia, target jurnal terakreditasi SINTA) tentang model
-kinetika adsorpsi, mengikuti gaya tinjauan Foo & Hameed (2010) untuk isoterm.
-Proyek ini **terpisah** dari riset CHIRPS-ML kopi Lampung di root repo.
+Narrative review (English) of adsorption kinetic models, modeled on the style of
+Foo & Hameed (2010) for isotherms. This project is **separate** from the CHIRPS-ML
+coffee study at the repository root.
 
-## Struktur
+## Structure
 ```
 review_kinetika_adsorpsi/
 ├── README.md
 ├── manuscript/
-│   ├── main.tex          # Naskah (kerangka + persamaan inti, bagian [TODO] belum ditulis)
-│   └── references.bib    # BibTeX (lihat status verifikasi di kepala file)
+│   ├── main.tex          # Manuscript (outline + core equations; [TODO] parts unwritten)
+│   └── references.bib    # BibTeX (see verification status at top of file)
 └── docs/
-    └── reference_list.md # Daftar referensi terverifikasi + kandidat yang belum dicek
+    └── reference_list.md # Verified references + unchecked candidates
 ```
 
-## Kompilasi
-Butuh TeX Live (`texlive-latex-extra`, `texlive-lang-other`, `texlive-bibtex-extra`),
-`biber`, dan `latexmk`.
+## Build
+Requires TeX Live (`texlive-latex-extra`, `texlive-bibtex-extra`), `biber`, and `latexmk`.
 
 ```bash
 cd review_kinetika_adsorpsi/manuscript
-latexmk -pdf main.tex      # hasil: main.pdf
-latexmk -c                 # hapus file sementara
+latexmk -pdf main.tex      # output: main.pdf
+latexmk -c                 # remove auxiliary files
 ```
 
-PDF dan file sementara LaTeX tidak di-commit (lihat `.gitignore`).
+The PDF and LaTeX auxiliary files are not committed (see `.gitignore`).
 
-## Konvensi
-- Bahasa Indonesia baku (PUEBI); abstrak dua bahasa (Indonesia + Inggris).
-- Gaya sitasi APA 7 (`biblatex-apa`); kunci sitasi `PenulisTahun_TopikSingkat`.
-- **Jangan menulis entri BibTeX dari ingatan.** Ambil dari CrossRef berdasarkan DOI.
-- Satuan dengan `siunitx`, tabel gaya tiga garis (`booktabs`).
+## Conventions
+- American English.
+- APA 7 citations (`biblatex-apa`); citation keys `AuthorYear_ShortTopic`.
+- **Never write BibTeX entries from memory.** Fetch them from CrossRef by DOI.
+- Units with `siunitx`; three-line tables with `booktabs`.
