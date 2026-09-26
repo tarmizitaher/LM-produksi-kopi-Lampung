@@ -1,8 +1,8 @@
 # Adsorption Kinetics Review
 
-Narrative review (English) of adsorption kinetic models, modeled on the style of
-Foo & Hameed (2010) for isotherms. This project is **separate** from the CHIRPS-ML
-coffee study at the repository root.
+Narrative review (English) of adsorption kinetic models in **liquid-phase batch** systems,
+in the spirit of Foo & Hameed (2010) for isotherms. See `docs/review_plan.md` for scope and
+structure. This project is **separate** from the CHIRPS-ML coffee study at the repository root.
 
 ## Structure
 ```
@@ -12,7 +12,8 @@ review_kinetika_adsorpsi/
 │   ├── main.tex          # Manuscript (outline + core equations; [TODO] parts unwritten)
 │   └── references.bib    # BibTeX (see verification status at top of file)
 └── docs/
-    └── reference_list.md # Verified references + unchecked candidates
+    ├── reference_list.md # Verified references + unchecked candidates
+    └── review_plan.md    # Agreed scope, angle, and section plan
 ```
 
 ## Build
